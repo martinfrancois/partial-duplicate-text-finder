@@ -1,5 +1,13 @@
-import os
+"""Find text files in one folder that are partial duplicates of each other.
+
+Every file is compared with every other file using difflib's SequenceMatcher
+ratio. Pairs at or above the threshold are reported. Subfolders are not
+searched.
+"""
+
+import argparse
 import difflib
+import os
 
 
 def calculate_similarity(text1, text2):
@@ -8,7 +16,7 @@ def calculate_similarity(text1, text2):
 
 
 def find_partial_duplicates(folder_path, similarity_threshold=0.8):
-    file_list = os.listdir(folder_path)
+    file_list = sorted(os.listdir(folder_path))
     duplicates = {}
 
     for i, file1 in enumerate(file_list):
@@ -33,10 +41,21 @@ def find_partial_duplicates(folder_path, similarity_threshold=0.8):
     return duplicates
 
 
-if __name__ == "__main__":
-    folder_path = "/home/user/docs"
-    similarity_threshold = 0.8
-    partial_duplicate_files = find_partial_duplicates(folder_path, similarity_threshold)
+def main():
+    parser = argparse.ArgumentParser(
+        description="Find partial duplicate text files in a folder. Subfolders are not searched."
+    )
+    parser.add_argument("folder", help="Folder that contains the text files to compare")
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.8,
+        help="Similarity ratio between 0 and 1 at or above which two files count as "
+             "partial duplicates (default: 0.8)",
+    )
+    args = parser.parse_args()
+
+    partial_duplicate_files = find_partial_duplicates(args.folder, args.threshold)
 
     if partial_duplicate_files:
         print("Partial duplicate files found:")
@@ -44,3 +63,7 @@ if __name__ == "__main__":
             print(f"{file} partial duplicates: {duplicates}")
     else:
         print("No partial duplicate files found.")
+
+
+if __name__ == "__main__":
+    main()
