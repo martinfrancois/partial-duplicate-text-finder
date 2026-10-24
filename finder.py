@@ -9,13 +9,15 @@ import argparse
 import difflib
 import os
 
+DEFAULT_THRESHOLD = 0.8
+
 
 def calculate_similarity(text1, text2):
     d = difflib.SequenceMatcher(None, text1, text2)
     return d.ratio()
 
 
-def find_partial_duplicates(folder_path, similarity_threshold=0.8):
+def find_partial_duplicates(folder_path, similarity_threshold=DEFAULT_THRESHOLD):
     file_list = sorted(os.listdir(folder_path))
     duplicates = {}
 
@@ -41,19 +43,26 @@ def find_partial_duplicates(folder_path, similarity_threshold=0.8):
     return duplicates
 
 
-def main():
+def threshold(value):
+    ratio = float(value)
+    if not 0 <= ratio <= 1:
+        raise argparse.ArgumentTypeError(f"must be between 0 and 1, got {value}")
+    return ratio
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Find partial duplicate text files in a folder. Subfolders are not searched."
     )
     parser.add_argument("folder", help="Folder that contains the text files to compare")
     parser.add_argument(
         "--threshold",
-        type=float,
-        default=0.8,
+        type=threshold,
+        default=DEFAULT_THRESHOLD,
         help="Similarity ratio between 0 and 1 at or above which two files count as "
-             "partial duplicates (default: 0.8)",
+             "partial duplicates (default: %(default)s)",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     partial_duplicate_files = find_partial_duplicates(args.folder, args.threshold)
 
