@@ -1,8 +1,7 @@
 """Find text files in one folder that are partial duplicates of each other.
 
 Every file is compared with every other file using difflib's SequenceMatcher
-ratio. Pairs at or above the threshold are reported. Subfolders are not
-searched.
+ratio. Pairs at or above the threshold are reported. Subfolders are skipped.
 """
 
 import argparse
@@ -18,7 +17,9 @@ def calculate_similarity(text1, text2):
 
 
 def find_partial_duplicates(folder_path, similarity_threshold=DEFAULT_THRESHOLD):
-    file_list = sorted(os.listdir(folder_path))
+    file_list = sorted(
+        name for name in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, name))
+    )
     duplicates = {}
 
     for i, file1 in enumerate(file_list):
@@ -52,7 +53,7 @@ def threshold(value):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
-        description="Find partial duplicate text files in a folder. Subfolders are not searched."
+        description="Find partial duplicate text files in a folder. Subfolders are skipped."
     )
     parser.add_argument("folder", help="Folder that contains the text files to compare")
     parser.add_argument(
