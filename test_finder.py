@@ -44,6 +44,13 @@ def test_folder_without_duplicates_returns_empty_dict(tmp_path):
     assert find_partial_duplicates(str(tmp_path), DEFAULT_THRESHOLD) == {}
 
 
+def test_subfolders_are_skipped(tmp_path):
+    (tmp_path / "a.txt").write_text(read("garden-notice.txt"), encoding="utf-8")
+    (tmp_path / "b.txt").write_text(read("garden-notice.txt"), encoding="utf-8")
+    (tmp_path / "nested").mkdir()
+    assert find_partial_duplicates(str(tmp_path), DEFAULT_THRESHOLD) == {"a.txt": ["b.txt"]}
+
+
 def test_cli_reports_the_example_folder(capsys):
     main([str(EXAMPLES)])
     assert capsys.readouterr().out.splitlines()[-3:] == [
