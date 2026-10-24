@@ -25,17 +25,11 @@ def find_partial_duplicates(folder_path, similarity_threshold=DEFAULT_THRESHOLD)
     for i, file1 in enumerate(file_list):
         print("File " + str(i) + " " + file1)
         with open(os.path.join(folder_path, file1), 'r', encoding='utf-8', errors='ignore') as f1:
-            try:
-                text1 = f1.read()
-            except UnicodeDecodeError:
-                continue
+            text1 = f1.read()
 
             for file2 in file_list[i + 1:]:
                 with open(os.path.join(folder_path, file2), 'r', encoding='utf-8', errors='ignore') as f2:
-                    try:
-                        text2 = f2.read()
-                    except UnicodeDecodeError:
-                        continue
+                    text2 = f2.read()
 
                     similarity = calculate_similarity(text1, text2)
                     if similarity >= similarity_threshold:

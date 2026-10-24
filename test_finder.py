@@ -51,6 +51,13 @@ def test_subfolders_are_skipped(tmp_path):
     assert find_partial_duplicates(str(tmp_path), DEFAULT_THRESHOLD) == {"a.txt": ["b.txt"]}
 
 
+def test_undecodable_bytes_are_dropped(tmp_path):
+    notice = read("garden-notice.txt").encode("utf-8")
+    (tmp_path / "a.txt").write_bytes(notice)
+    (tmp_path / "b.txt").write_bytes(b"\xff\xfe" + notice)
+    assert find_partial_duplicates(str(tmp_path), 1.0) == {"a.txt": ["b.txt"]}
+
+
 def test_cli_reports_the_example_folder(capsys):
     main([str(EXAMPLES)])
     assert capsys.readouterr().out.splitlines()[-3:] == [
