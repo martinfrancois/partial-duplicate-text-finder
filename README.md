@@ -13,7 +13,9 @@ Run the script with the folder and, optionally, the similarity threshold (betwee
 python3 finder.py /home/user/docs --threshold 0.9
 ```
 
-`python3 finder.py --help` lists the options and the default threshold. Installing the package with `python3 -m pip install .` (Python 3.10 or newer) adds a `partial-duplicate-text-finder` command that takes the same arguments.
+`python3 finder.py --help` lists the options and the default threshold. Requires Python 3.10 or newer.
+
+`faster.py` is a faster version that is still work in progress and not 100 % functional.
 
 ## Example
 
