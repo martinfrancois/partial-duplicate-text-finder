@@ -1,0 +1,31 @@
+name: Bug report
+description: Report something that doesn't work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Leave out private paths, file contents and personal data, also from logs and screenshots. A few short invented text files, like the ones in `examples/`, are the easiest way to show a problem.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The command you ran (for example `python3 finder.py /path/to/folder --threshold 0.9`) and the files that show the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Commit you ran, Python version, operating system, and anything else that matters here, such as the files' encoding.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or logs
+      render: text
